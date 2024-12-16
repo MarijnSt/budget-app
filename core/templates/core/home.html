@@ -40,7 +40,7 @@
                             </div>
                             <div class="col-md-4">
                                 <a href="#needs-section" class="text-decoration-none text-dark">
-                                    <div class="category-card p-3 border rounded {% if needs.spent > needs.budget %}border-danger bg-danger bg-opacity-10{% elif needs.spent < needs.budget %}border-success bg-success bg-opacity-10{% endif %}">
+                                    <div class="category-card p-3 border rounded {% if needs.spent > needs.budget %}border-danger bg-danger bg-opacity-10{% endif %}">
                                         <h6 class="text-muted mb-2">Needs (50%)</h6>
                                         <div class="d-flex justify-content-between align-items-baseline">
                                             <span class="h5 mb-0">€{{ needs.spent|floatformat:2 }}</span>
@@ -51,7 +51,7 @@
                             </div>
                             <div class="col-md-4">
                                 <a href="#wants-section" class="text-decoration-none text-dark">
-                                    <div class="category-card p-3 border rounded {% if wants.spent > wants.budget %}border-danger bg-danger bg-opacity-10{% elif wants.spent < wants.budget %}border-success bg-success bg-opacity-10{% endif %}">
+                                    <div class="category-card p-3 border rounded {% if wants.spent > wants.budget %}border-danger bg-danger bg-opacity-10{% endif %}">
                                         <h6 class="text-muted mb-2">Wants (30%)</h6>
                                         <div class="d-flex justify-content-between align-items-baseline">
                                             <span class="h5 mb-0">€{{ wants.spent|floatformat:2 }}</span>
@@ -62,7 +62,7 @@
                             </div>
                             <div class="col-md-4">
                                 <a href="#savings-section" class="text-decoration-none text-dark">
-                                    <div class="category-card p-3 border rounded {% if savings.spent > savings.budget %}border-danger bg-danger bg-opacity-10{% elif savings.spent < savings.budget %}border-success bg-success bg-opacity-10{% endif %}">
+                                    <div class="category-card p-3 border rounded {% if savings.spent > savings.budget %}border-danger bg-danger bg-opacity-10{% endif %}">
                                         <h6 class="text-muted mb-2">Savings (20%)</h6>
                                         <div class="d-flex justify-content-between align-items-baseline">
                                             <span class="h5 mb-0">€{{ savings.spent|floatformat:2 }}</span>
@@ -79,123 +79,28 @@
 
         <div class="row mt-5">
             <div class="col-12">
-                <div id="income-section" class="card shadow-sm mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title d-flex justify-content-between align-items-center">
-                            <span>Income</span>
-                            <small class="text-muted">€3,000.00</small>
-                        </h5>
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Description</th>
-                                        <th class="text-end">Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Mar 1</td>
-                                        <td>Salary</td>
-                                        <td class="text-end">€2,800.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Mar 15</td>
-                                        <td>Freelance Work</td>
-                                        <td class="text-end">€200.00</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                <div id="income-section">
+                    {% with title="Income" spent=total_income transactions=income.transactions %}
+                        {% include 'core/components/transaction_table.html' %}
+                    {% endwith %}
                 </div>
 
-                <div id="needs-section" class="card shadow-sm mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title d-flex justify-content-between align-items-center">
-                            <span>Needs</span>
-                            <small class="text-muted">€{{ needs.spent|floatformat:2 }} / €{{ needs.budget|floatformat:2 }}</small>
-                        </h5>
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Description</th>
-                                        <th class="text-end">Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for transaction in needs.transactions %}
-                                    <tr>
-                                        <td>{{ transaction.date }}</td>
-                                        <td>{{ transaction.description }}</td>
-                                        <td class="text-end">€{{ transaction.amount|floatformat:2 }}</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                <div id="needs-section">
+                    {% with title="Needs" spent=needs.spent budget=needs.budget transactions=needs.transactions %}
+                        {% include 'core/components/transaction_table.html' %}
+                    {% endwith %}
                 </div>
 
-                <div id="wants-section" class="card shadow-sm mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title d-flex justify-content-between align-items-center">
-                            <span>Wants</span>
-                            <small class="text-muted">€900.00</small>
-                        </h5>
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Description</th>
-                                        <th class="text-end">Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for transaction in wants.transactions %}
-                                    <tr>
-                                        <td>{{ transaction.date }}</td>
-                                        <td>{{ transaction.description }}</td>
-                                        <td class="text-end">€{{ transaction.amount|floatformat:2 }}</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                <div id="wants-section">
+                    {% with title="Wants" spent=wants.spent budget=wants.budget transactions=wants.transactions %}
+                        {% include 'core/components/transaction_table.html' %}
+                    {% endwith %}
                 </div>
 
-                <div id="savings-section" class="card shadow-sm mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title d-flex justify-content-between align-items-center">
-                            <span>Savings</span>
-                            <small class="text-muted">€600.00</small>
-                        </h5>
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Description</th>
-                                        <th class="text-end">Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for transaction in savings.transactions %}
-                                    <tr>
-                                        <td>{{ transaction.date }}</td>
-                                        <td>{{ transaction.description }}</td>
-                                        <td class="text-end">€{{ transaction.amount|floatformat:2 }}</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                <div id="savings-section">
+                    {% with title="Savings" spent=savings.spent budget=savings.budget transactions=savings.transactions %}
+                        {% include 'core/components/transaction_table.html' %}
+                    {% endwith %}
                 </div>
             </div>
         </div>

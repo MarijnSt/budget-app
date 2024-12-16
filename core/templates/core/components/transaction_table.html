@@ -1,0 +1,34 @@
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h5 class="card-title d-flex justify-content-between align-items-center">
+            <span>{{ title }}</span>
+            <small class="text-muted">
+                {% if budget %}
+                    €{{ spent|floatformat:2 }} / €{{ budget|floatformat:2 }}
+                {% else %}
+                    €{{ spent|floatformat:2 }}
+                {% endif %}
+            </small>
+        </h5>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 150px">Date</th>
+                        <th>Description</th>
+                        <th style="width: 120px" class="text-end">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transaction in transactions %}
+                    <tr>
+                        <td>{{ transaction.date }}</td>
+                        <td>{{ transaction.description }}</td>
+                        <td class="text-end">€{{ transaction.amount|floatformat:2 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div> 
