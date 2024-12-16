@@ -1,23 +1,202 @@
 {% extends 'core/base.html' %}
+{% load tz %}
 
 {% block title %}Home{% endblock %}
 
 {% block content %}
 <div class="row">
-    <div class="col-md-8 offset-md-2 text-center">
-        <h1 class="display-4 mb-4">Welcome to your budget</h1>
-        <p class="lead">A simple way to manage your money and achieve financial freedom.</p>
-        
-        <div class="row mt-5 justify-content-center">
-            <div class="col-auto">
-                <a href="#" class="btn btn-outline-success px-4 py-2 mx-2">
-                    Add Income
-                </a>
+    <div class="col-md-8 offset-md-2">
+        <div class="text-center">
+            <h1 class="display-4 mb-4">Welcome to your budget</h1>
+            <p class="lead">A simple way to manage your money and achieve financial freedom.</p>
+            
+            <div class="row mt-5 justify-content-center">
+                <div class="col-auto">
+                    <a href="#" class="btn btn-outline-success px-4 py-2 mx-2">
+                        Add Income
+                    </a>
+                </div>
+                <div class="col-auto">
+                    <a href="#" class="btn btn-outline-danger px-4 py-2 mx-2">
+                        Add Expense
+                    </a>
+                </div>
             </div>
-            <div class="col-auto">
-                <a href="#" class="btn btn-outline-danger px-4 py-2 mx-2">
-                    Add Expense
-                </a>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div id="budget-card" class="card-body">
+                        <h5 class="card-title text-muted mb-4">{% now "F Y" %} Overview</h5>
+                        <div class="row g-4">
+                            <div class="col-12">
+                                <a href="#income-section" class="text-decoration-none text-dark">
+                                    <div class="category-card d-flex justify-content-between align-items-center border-bottom pb-3">
+                                        <span class="h5 mb-0">Total Income</span>
+                                        <span class="h5 mb-0">€{{ total_income|floatformat:2 }}</span>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-4">
+                                <a href="#needs-section" class="text-decoration-none text-dark">
+                                    <div class="category-card p-3 border rounded {% if needs.spent > needs.budget %}border-danger bg-danger bg-opacity-10{% elif needs.spent < needs.budget %}border-success bg-success bg-opacity-10{% endif %}">
+                                        <h6 class="text-muted mb-2">Needs (50%)</h6>
+                                        <div class="d-flex justify-content-between align-items-baseline">
+                                            <span class="h5 mb-0">€{{ needs.spent|floatformat:2 }}</span>
+                                            <small class="text-muted">/ €{{ needs.budget|floatformat:2 }}</small>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-4">
+                                <a href="#wants-section" class="text-decoration-none text-dark">
+                                    <div class="category-card p-3 border rounded {% if wants.spent > wants.budget %}border-danger bg-danger bg-opacity-10{% elif wants.spent < wants.budget %}border-success bg-success bg-opacity-10{% endif %}">
+                                        <h6 class="text-muted mb-2">Wants (30%)</h6>
+                                        <div class="d-flex justify-content-between align-items-baseline">
+                                            <span class="h5 mb-0">€{{ wants.spent|floatformat:2 }}</span>
+                                            <small class="text-muted">/ €{{ wants.budget|floatformat:2 }}</small>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-4">
+                                <a href="#savings-section" class="text-decoration-none text-dark">
+                                    <div class="category-card p-3 border rounded {% if savings.spent > savings.budget %}border-danger bg-danger bg-opacity-10{% elif savings.spent < savings.budget %}border-success bg-success bg-opacity-10{% endif %}">
+                                        <h6 class="text-muted mb-2">Savings (20%)</h6>
+                                        <div class="d-flex justify-content-between align-items-baseline">
+                                            <span class="h5 mb-0">€{{ savings.spent|floatformat:2 }}</span>
+                                            <small class="text-muted">/ €{{ savings.budget|floatformat:2 }}</small>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-12">
+                <div id="income-section" class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title d-flex justify-content-between align-items-center">
+                            <span>Income</span>
+                            <small class="text-muted">€3,000.00</small>
+                        </h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Description</th>
+                                        <th class="text-end">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Mar 1</td>
+                                        <td>Salary</td>
+                                        <td class="text-end">€2,800.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Mar 15</td>
+                                        <td>Freelance Work</td>
+                                        <td class="text-end">€200.00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="needs-section" class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title d-flex justify-content-between align-items-center">
+                            <span>Needs</span>
+                            <small class="text-muted">€{{ needs.spent|floatformat:2 }} / €{{ needs.budget|floatformat:2 }}</small>
+                        </h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Description</th>
+                                        <th class="text-end">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for transaction in needs.transactions %}
+                                    <tr>
+                                        <td>{{ transaction.date }}</td>
+                                        <td>{{ transaction.description }}</td>
+                                        <td class="text-end">€{{ transaction.amount|floatformat:2 }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="wants-section" class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title d-flex justify-content-between align-items-center">
+                            <span>Wants</span>
+                            <small class="text-muted">€900.00</small>
+                        </h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Description</th>
+                                        <th class="text-end">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for transaction in wants.transactions %}
+                                    <tr>
+                                        <td>{{ transaction.date }}</td>
+                                        <td>{{ transaction.description }}</td>
+                                        <td class="text-end">€{{ transaction.amount|floatformat:2 }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="savings-section" class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title d-flex justify-content-between align-items-center">
+                            <span>Savings</span>
+                            <small class="text-muted">€600.00</small>
+                        </h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Description</th>
+                                        <th class="text-end">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for transaction in savings.transactions %}
+                                    <tr>
+                                        <td>{{ transaction.date }}</td>
+                                        <td>{{ transaction.description }}</td>
+                                        <td class="text-end">€{{ transaction.amount|floatformat:2 }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
