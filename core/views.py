@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from transactions.constants import TransactionCategory
 
 def home(request):
     # This will later be calculated from actual transactions
@@ -10,7 +11,7 @@ def home(request):
                 {'date': 'Mar 15', 'description': 'Freelance Work', 'amount': 200.00},
             ]
         },
-        'needs': {
+        TransactionCategory.NEEDS.value: {
             'budget': 1500.00,   # 50% of income
             'spent': 1070.00,
             'transactions': [
@@ -19,7 +20,7 @@ def home(request):
                 {'date': 'Mar 10', 'description': 'Utilities', 'amount': 120.00},
             ]
         },
-        'wants': {
+        TransactionCategory.WANTS.value: {
             'budget': 900.00,   # 30% of income
             'spent': 1060.00,
             'transactions': [
@@ -28,7 +29,7 @@ def home(request):
                 {'date': 'Mar 15', 'description': 'Shopping', 'amount': 1000.00},
             ]
         },
-        'savings': {
+        TransactionCategory.SAVINGS.value: {
             'budget': 600.00,   # 20% of income
             'spent': 600.00,
             'transactions': [
