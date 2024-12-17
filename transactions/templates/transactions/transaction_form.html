@@ -12,7 +12,7 @@
                 <form method="post">
                     {% csrf_token %}
                     {% for field in form %}
-                    <div class="mb-3">
+                    <div class="mb-3 {% if field.name == 'category' %}category-field{% endif %}">
                         <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
                         {{ field.errors }}
                         {{ field|add_class:"form-control" }}
@@ -29,4 +29,27 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const transactionTypeField = document.querySelector('#id_transaction_type');
+        const categoryField = document.querySelector('.category-field');
+
+        function toggleCategoryField() {
+            if (transactionTypeField.value === 'income') {
+                categoryField.style.display = 'none';
+            } else {
+                categoryField.style.display = 'block';
+            }
+        }
+
+        // Run on page load
+        toggleCategoryField();
+
+        // Run when transaction type changes
+        transactionTypeField.addEventListener('change', toggleCategoryField);
+    });
+</script>
 {% endblock %} 
