@@ -28,13 +28,15 @@
             <div class="col-12">
                 <div class="card shadow-sm">
                     <div id="budget-card" class="card-body">
-                        <h5 class="card-title text-muted mb-4">{% now "F Y" %} Overview</h5>
+                        <h5 class="card-title text-muted mb-4 text-center">{% now "F Y" %} Overview</h5>
                         <div class="row g-4">
                             <div class="col-12">
                                 <a href="#income-section" class="text-decoration-none text-dark">
-                                    <div class="category-card d-flex justify-content-between align-items-center border-bottom pb-3">
-                                        <span class="h5 mb-0">Total Income</span>
-                                        <span class="h5 mb-0">€{{ total_income|floatformat:2 }}</span>
+                                    <div class="category-card p-3 text-center">
+                                        <h6 class="text-muted mb-2">Total Income</h6>
+                                        <div class="d-flex justify-content-center">
+                                            <span class="h5 mb-0">€{{ total_income|floatformat:2 }}</span>
+                                        </div>
                                     </div>
                                 </a>
                             </div>
