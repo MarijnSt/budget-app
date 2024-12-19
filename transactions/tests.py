@@ -101,3 +101,11 @@ class TrasactionViewsTest(TestCase):
         self.assertEqual(self.transaction.description, 'Update Test Transaction')
         self.assertEqual(self.transaction.amount, 200.00)
         self.assertEqual(self.transaction.transaction_type, TransactionType.INCOME.value)
+
+    def test_transaction_delete_view(self):
+        """
+        We're able to delete a transaction
+        """
+        response = self.client.post(reverse('transactions:delete', args=[self.transaction.id]))
+        self.assertEqual(response.status_code, 302)
+        self.assertFalse(Transaction.objects.filter(id=self.transaction.id).exists())
