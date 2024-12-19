@@ -3,11 +3,12 @@ from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.utils import timezone
+
+from transactions.forms import TransactionForm
 from .models import Transaction
 from .constants import TransactionType, TransactionCategory
 
 class TransactionModelTest(TestCase):
-    """ TEST CORE BUSINESS LOGIC """
     def test_expenses_category_validation(self):
         """
         Category is required for expenses
@@ -35,6 +36,14 @@ class TransactionModelTest(TestCase):
                 category=TransactionCategory.NEEDS.value
             )
         self.assertTrue('Category should not be set for income' in context.exception)
+
+class TransactionFormTest(TestCase):
+    def test_category_field_visibility(self):
+        """
+        Category field should not be required
+        """
+        form = TransactionForm()
+        self.assertFalse(form.fields['category'].required)
 
 class TrasactionViewsTest(TestCase):
     def setUp(self):
