@@ -14,7 +14,6 @@ class Transaction(models.Model):
         choices=TransactionCategory.choices(),
         null=True,
         blank=True,
-        help_text="Category is required for expenses, leave empty for income"
     )
 
     def clean(self):

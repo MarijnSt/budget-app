@@ -1,9 +1,40 @@
+from django.forms import ValidationError
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.utils import timezone
 from .models import Transaction
 from .constants import TransactionType, TransactionCategory
+
+class TransactionModelTest(TestCase):
+    """ TEST CORE BUSINESS LOGIC """
+    def test_expenses_category_validation(self):
+        """
+        Category is required for expenses
+        """
+        with self.assertRaises(ValidationError) as context:
+            Transaction.objects.create(
+                date=timezone.now(),
+                description='Test Transaction',
+                amount=100.00,
+                transaction_type=TransactionType.EXPENSE.value
+            )
+            
+        self.assertTrue('Category is required for expenses' in context.exception)
+
+    def test_income_category_validation(self):
+        """
+        Category is not allowed for income
+        """
+        with self.assertRaises(ValidationError) as context:
+            Transaction.objects.create(
+                date=timezone.now(),
+                description='Test Transaction',
+                amount=100.00,
+                transaction_type=TransactionType.INCOME.value,
+                category=TransactionCategory.NEEDS.value
+            )
+        self.assertTrue('Category should not be set for income' in context.exception)
 
 class TrasactionViewsTest(TestCase):
     def setUp(self):
@@ -79,7 +110,7 @@ class TrasactionViewsTest(TestCase):
         
         form = response.context['form']
         self.assertFalse(form.is_valid())
-
+    
     def test_transaction_update_view(self):
         """
         We're able to update a transaction
