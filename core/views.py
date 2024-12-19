@@ -49,6 +49,7 @@ def home(request):
         category_data = budget_data[expense.category]
         category_data['spent'] += expense.amount
         category_data['transactions'].append({
+            'id': expense.id,
             'date': expense.date.strftime('%b %d'),
             'description': expense.description,
             'amount': expense.amount
@@ -65,6 +66,7 @@ def home(request):
         'total_income': total_income,
         'income': {
             'transactions': [{
+                'id': t.id,
                 'date': t.date.strftime('%b %d'),
                 'description': t.description,
                 'amount': t.amount
