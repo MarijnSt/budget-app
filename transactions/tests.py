@@ -79,3 +79,25 @@ class TrasactionViewsTest(TestCase):
         
         form = response.context['form']
         self.assertFalse(form.is_valid())
+
+    def test_transaction_update_view(self):
+        """
+        We're able to update a transaction
+        """
+        response = self.client.get(reverse('transactions:edit', args=[self.transaction.id]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'transactions/transaction_form.html')
+
+        # update the transaction
+        response = self.client.post(reverse('transactions:edit', args=[self.transaction.id]), {
+            'date': timezone.now().date(),
+            'description': 'Update Test Transaction',
+            'amount': 200.00,
+            'transaction_type': TransactionType.INCOME.value
+        })
+
+        self.assertEqual(response.status_code, 302)
+        self.transaction.refresh_from_db()
+        self.assertEqual(self.transaction.description, 'Update Test Transaction')
+        self.assertEqual(self.transaction.amount, 200.00)
+        self.assertEqual(self.transaction.transaction_type, TransactionType.INCOME.value)
